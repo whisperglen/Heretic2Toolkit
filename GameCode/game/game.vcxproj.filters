@@ -471,6 +471,9 @@
     <ClCompile Include="Utilities.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="g_save_ex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="decals.h">

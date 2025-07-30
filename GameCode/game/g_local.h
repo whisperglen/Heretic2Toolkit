@@ -30,6 +30,8 @@
 #define	GAMEVERSION	"Heretic2v16"
 #endif
 
+#define GAME_DATE_V106 "May  4 1999"
+
 // Protocol bytes that can be directly added to messages.
 
 // volume mask for ent->sound_data - makes room for attn value in the lower bits

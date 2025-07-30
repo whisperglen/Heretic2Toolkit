@@ -1406,62 +1406,62 @@ void ClientCommand (edict_t *ent)
 		return;
 	}
 
-	if (level.intermissiontime)
+	if ( level.intermissiontime )
 		return;
 
-	else if (Q_stricmp (cmd, "use") == 0)
-		Cmd_Use_f (ent, gi.args());
-	else if (Q_stricmp (cmd, "toggleinventory") == 0)
-		Cmd_ToggleInventory_f (ent);
-	else if (Q_stricmp (cmd, "invnextw") == 0)
-		SelectNextItem (ent, IT_WEAPON);
-	else if (Q_stricmp (cmd, "invprevw") == 0)
-		SelectPrevItem (ent, IT_WEAPON);
-	else if (Q_stricmp (cmd, "invnextp") == 0)
-		SelectNextItem (ent, IT_DEFENSE);
-	else if (Q_stricmp (cmd, "invprevp") == 0)
-		SelectPrevItem (ent, IT_DEFENSE);
-	else if (Q_stricmp (cmd, "weapprev") == 0)
-		Cmd_WeapPrev_f (ent);
-	else if (Q_stricmp (cmd, "weapnext") == 0)
-		Cmd_WeapNext_f (ent);
-	else if (Q_stricmp (cmd, "defprev") == 0)
-		Cmd_DefPrev_f (ent);
-	else if (Q_stricmp (cmd, "defnext") == 0)
-		Cmd_DefNext_f (ent);
-	else if (Q_stricmp (cmd, "weaplast") == 0)
-		Cmd_WeapLast_f (ent);
-	else if (Q_stricmp (cmd, "kill") == 0)
-		Cmd_Kill_f (ent);
-	else if (Q_stricmp (cmd, "spawn") == 0)
-		Cmd_SpawnEntity_f (ent);
-	else if (Q_stricmp (cmd, "nextmonsterframe") == 0)
-		Cmd_NextMonsterFrame_f(ent);
-	else if (Q_stricmp (cmd, "crazymonsters") == 0)
-		Cmd_CrazyMonsters_f (ent);
-	else if (Q_stricmp (cmd, "angermonsters") == 0)
-		Cmd_AngerMonsters_f (ent);
-	else if (Q_stricmp (cmd, "showcoords") == 0)
-		Cmd_ShowCoords_f (ent);
-	else if (Q_stricmp (cmd, "testfx") == 0)
-		Cmd_TestFX_f(ent);
-	else if (Q_stricmp (cmd, "gameversion") == 0)
+	else if ( Q_stricmp( cmd, "use" ) == 0 )
+		Cmd_Use_f( ent, gi.args() );
+	else if ( Q_stricmp( cmd, "toggleinventory" ) == 0 )
+		Cmd_ToggleInventory_f( ent );
+	else if ( Q_stricmp( cmd, "invnextw" ) == 0 )
+		SelectNextItem( ent, IT_WEAPON );
+	else if ( Q_stricmp( cmd, "invprevw" ) == 0 )
+		SelectPrevItem( ent, IT_WEAPON );
+	else if ( Q_stricmp( cmd, "invnextp" ) == 0 )
+		SelectNextItem( ent, IT_DEFENSE );
+	else if ( Q_stricmp( cmd, "invprevp" ) == 0 )
+		SelectPrevItem( ent, IT_DEFENSE );
+	else if ( Q_stricmp( cmd, "weapprev" ) == 0 )
+		Cmd_WeapPrev_f( ent );
+	else if ( Q_stricmp( cmd, "weapnext" ) == 0 )
+		Cmd_WeapNext_f( ent );
+	else if ( Q_stricmp( cmd, "defprev" ) == 0 )
+		Cmd_DefPrev_f( ent );
+	else if ( Q_stricmp( cmd, "defnext" ) == 0 )
+		Cmd_DefNext_f( ent );
+	else if ( Q_stricmp( cmd, "weaplast" ) == 0 )
+		Cmd_WeapLast_f( ent );
+	else if ( Q_stricmp( cmd, "kill" ) == 0 )
+		Cmd_Kill_f( ent );
+	else if ( Q_stricmp( cmd, "spawn" ) == 0 )
+		Cmd_SpawnEntity_f( ent );
+	else if ( Q_stricmp( cmd, "nextmonsterframe" ) == 0 )
+		Cmd_NextMonsterFrame_f( ent );
+	else if ( Q_stricmp( cmd, "crazymonsters" ) == 0 )
+		Cmd_CrazyMonsters_f( ent );
+	else if ( Q_stricmp( cmd, "angermonsters" ) == 0 )
+		Cmd_AngerMonsters_f( ent );
+	else if ( Q_stricmp( cmd, "showcoords" ) == 0 )
+		Cmd_ShowCoords_f( ent );
+	else if ( Q_stricmp( cmd, "testfx" ) == 0 )
+		Cmd_TestFX_f( ent );
+	else if ( Q_stricmp( cmd, "gameversion" ) == 0 )
 	{
-		gi.cprintf (ent, PRINT_HIGH, "%s : %s\n", GAMEVERSION, __DATE__);
+		gi.cprintf (ent, PRINT_HIGH, "%s : %s\n", GAMEVERSION, GAME_DATE_V106 /*__DATE__*/);
 	}
 
-	else if (Q_stricmp (cmd, "playbetter") == 0)	//	else if (Q_stricmp (cmd, "god") == 0)
-		Cmd_God_f (ent);
-	else if (Q_stricmp (cmd, "kiwi") == 0)			//	else if (Q_stricmp (cmd, "noclip") == 0)
-		Cmd_Noclip_f (ent);
-	else if (Q_stricmp (cmd, "victor") == 0)		//	else if (Q_stricmp (cmd, "notarget") == 0)
-		Cmd_Notarget_f (ent);
-	else if (Q_stricmp (cmd, "suckitdown") == 0)	//	else if (Q_stricmp (cmd, "give") == 0)
-		Cmd_Give_f (ent);
-	else if (Q_stricmp (cmd, "twoweeks") == 0)		//	else if (Q_stricmp (cmd, "powerup") == 0)
-		Cmd_Powerup_f (ent);
-	else if (Q_stricmp (cmd, "meatwagon") == 0)		//	else if (Q_stricmp (cmd, "killmonsters") == 0)
-		Cmd_KillMonsters_f (ent);
+	else if ( Q_stricmp( cmd, "playbetter" ) == 0 )	//	else if (Q_stricmp (cmd, "god") == 0)
+		Cmd_God_f( ent );
+	else if ( Q_stricmp( cmd, "kiwi" ) == 0 )			//	else if (Q_stricmp (cmd, "noclip") == 0)
+		Cmd_Noclip_f( ent );
+	else if ( Q_stricmp( cmd, "victor" ) == 0 )		//	else if (Q_stricmp (cmd, "notarget") == 0)
+		Cmd_Notarget_f( ent );
+	else if ( Q_stricmp( cmd, "suckitdown" ) == 0 )	//	else if (Q_stricmp (cmd, "give") == 0)
+		Cmd_Give_f( ent );
+	else if ( Q_stricmp( cmd, "twoweeks" ) == 0 )		//	else if (Q_stricmp (cmd, "powerup") == 0)
+		Cmd_Powerup_f( ent );
+	else if ( Q_stricmp( cmd, "meatwagon" ) == 0 )		//	else if (Q_stricmp (cmd, "killmonsters") == 0)
+		Cmd_KillMonsters_f( ent );
 
 	else if (Q_stricmp (cmd, "fov") == 0)
 	{

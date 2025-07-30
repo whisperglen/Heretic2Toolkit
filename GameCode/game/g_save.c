@@ -15,6 +15,12 @@ extern void LoadPersistantEffects(FILE *f);
 extern void SavePersistantEffects(FILE *f);
 extern player_export_t	playerExport;	// interface to player DLL.
 
+#define FP_TO_HEXP(X) (X) = games_fp_to_hexp( (X) )
+#define HEXP_TO_FP(X) (X) = games_hexp_to_fp( (X) )
+
+extern void* games_fp_to_hexp( void* );
+extern void* games_hexp_to_fp( void* );
+
 field_t fields[] = {
 	{"classname", FOFS(classname), F_LSTRING},
 	{"origin", FOFS(s.origin), F_VECTOR},
@@ -296,7 +302,7 @@ void InitGame (void)
 
 	sv_cheats = gi.cvar ("cheats", "0", CVAR_SERVERINFO|CVAR_LATCH);
 	gi.cvar ("gamename", GAMEVERSION , CVAR_SERVERINFO | CVAR_LATCH);
-	gi.cvar ("gamedate", __DATE__ , CVAR_SERVERINFO | CVAR_LATCH);
+	gi.cvar ("gamedate", GAME_DATE_V106 /*__DATE__*/ , CVAR_SERVERINFO | CVAR_LATCH);
 
 	maxclients = gi.cvar ("maxclients", "4", CVAR_SERVERINFO | CVAR_LATCH);
 	deathmatch = gi.cvar ("deathmatch", "0", CVAR_LATCH);
@@ -625,7 +631,7 @@ void WriteGame (char *filename, qboolean autosave)
 		gi.error ("Couldn't open %s", filename);
 
 	memset (str, 0, sizeof(str));
-	strcpy (str, __DATE__);
+	strcpy (str, /*GAME_DATE_V106*/ __DATE__);
 	fwrite (str, sizeof(str), 1, f);
 
 	game.autosaved = autosave;
@@ -674,11 +680,15 @@ void ReadGame (char *filename)
 		gi.error ("Couldn't open %s", filename);
 
 	fread (str, sizeof(str), 1, f);
-	if (strcmp (str, __DATE__))
+	if (strcmp (str, /*GAME_DATE_V106*/ __DATE__))
 	{
+#if 0
+		gi.dprintf ("Savegame from an older version %s.\n", str);
+#else
 		fclose (f);
-		gi.error ("Savegame from an older version.\n");
+		gi.error ("Savegame from an older version %s.\n", str);
 		return;
+#endif
 	}
 
 	gi.FreeTags (TAG_GAME);
@@ -719,6 +729,52 @@ void WriteEdict (FILE *f, edict_t *ent)
 	{
 		WriteField1 (f, field, (byte *)&temp);
 	}
+
+	//The idea is to take every function pointer and data pointer (const string, global edict),
+	// find the dll they belong to and store them as an offset from that dll's startAddress
+	FP_TO_HEXP( temp.isBlocking );
+	FP_TO_HEXP( temp.msgHandler );
+	FP_TO_HEXP( temp.think );
+	FP_TO_HEXP( temp.ai );
+	FP_TO_HEXP( temp.bounced );
+	FP_TO_HEXP( temp.isBlocked );
+	FP_TO_HEXP( temp.touch );
+	FP_TO_HEXP( temp.use );
+	FP_TO_HEXP( temp.TriggerActivated );
+	FP_TO_HEXP( temp.prethink );
+	FP_TO_HEXP( temp.blocked );
+	FP_TO_HEXP( temp.pain );
+	FP_TO_HEXP( temp.die );
+	FP_TO_HEXP( temp.oldthink );
+	FP_TO_HEXP( temp.oldtouch );
+	FP_TO_HEXP( temp.cant_attack_think );
+	FP_TO_HEXP( temp.mood_think );
+	FP_TO_HEXP( temp.pre_think );
+	FP_TO_HEXP( temp.post_think );
+
+	FP_TO_HEXP( temp.text_msg );
+	FP_TO_HEXP( temp.moveinfo.endfunc );
+	FP_TO_HEXP( temp.monsterinfo.otherenemyname );
+	FP_TO_HEXP( temp.monsterinfo.currentmove );
+	FP_TO_HEXP( temp.monsterinfo.idle );
+	FP_TO_HEXP( temp.monsterinfo.search );
+	FP_TO_HEXP( temp.monsterinfo.dodge );
+	FP_TO_HEXP( temp.monsterinfo.attack );
+	FP_TO_HEXP( temp.monsterinfo.sight );
+	FP_TO_HEXP( temp.monsterinfo.dismember );
+	FP_TO_HEXP( temp.monsterinfo.alert );
+	FP_TO_HEXP( temp.monsterinfo.checkattack );
+	FP_TO_HEXP( temp.monsterinfo.c_callback );
+	FP_TO_HEXP( temp.monsterinfo.c_ent ); //do we set to NULL?
+	FP_TO_HEXP( temp.enemy_buoy ); //do we set to NULL?
+	for ( int i = 0; i < ARRAYSIZE( temp.nextbuoy ); i++ )
+	{
+		FP_TO_HEXP( temp.nextbuoy[i] );
+	}
+	FP_TO_HEXP( temp.volfx );
+	FP_TO_HEXP( temp.wakeup_target );
+	FP_TO_HEXP( temp.pain_target );
+	FP_TO_HEXP( temp.homebuoy );
 
 	// write the block
 	fwrite (&temp, sizeof(temp), 1, f);
@@ -828,6 +884,54 @@ void ReadEdict (FILE *f, edict_t *ent)
 	ent->msgQ.msgs = msgs;
 	ent->last_alert = NULL;
 
+	//Do the reverse from WriteEdicts, which is to find the base address of every dll,
+	// then convert each offset stored, into an actual pointer in the code or data segment of the dll
+	//I tried to cover pointer that are not handled by savefileds, and not cleared/saved here or
+	// in the caller. Hope tht'a all of them, and they indeed are static pointer and not dynamic memory
+	HEXP_TO_FP( ent->isBlocking );
+	HEXP_TO_FP( ent->msgHandler );
+	HEXP_TO_FP( ent->think );
+	HEXP_TO_FP( ent->ai );
+	HEXP_TO_FP( ent->bounced );
+	HEXP_TO_FP( ent->isBlocked );
+	HEXP_TO_FP( ent->touch );
+	HEXP_TO_FP( ent->use );
+	HEXP_TO_FP( ent->TriggerActivated );
+	HEXP_TO_FP( ent->prethink );
+	HEXP_TO_FP( ent->blocked );
+	HEXP_TO_FP( ent->pain );
+	HEXP_TO_FP( ent->die );
+	HEXP_TO_FP( ent->oldthink );
+	HEXP_TO_FP( ent->oldtouch );
+	HEXP_TO_FP( ent->cant_attack_think );
+	HEXP_TO_FP( ent->mood_think );
+	HEXP_TO_FP( ent->pre_think );
+	HEXP_TO_FP( ent->post_think );
+
+	HEXP_TO_FP( ent->text_msg );
+	HEXP_TO_FP( ent->moveinfo.endfunc );
+	HEXP_TO_FP( ent->monsterinfo.otherenemyname );
+	HEXP_TO_FP( ent->monsterinfo.currentmove );
+	HEXP_TO_FP( ent->monsterinfo.idle );
+	HEXP_TO_FP( ent->monsterinfo.search );
+	HEXP_TO_FP( ent->monsterinfo.dodge );
+	HEXP_TO_FP( ent->monsterinfo.attack );
+	HEXP_TO_FP( ent->monsterinfo.sight );
+	HEXP_TO_FP( ent->monsterinfo.dismember );
+	HEXP_TO_FP( ent->monsterinfo.alert );
+	HEXP_TO_FP( ent->monsterinfo.checkattack );
+	HEXP_TO_FP( ent->monsterinfo.c_callback );
+	HEXP_TO_FP( ent->monsterinfo.c_ent ); //do we set to NULL?
+	HEXP_TO_FP( ent->enemy_buoy ); //do we set to NULL?
+	for ( int i = 0; i < ARRAYSIZE( ent->nextbuoy ); i++ )
+	{
+		HEXP_TO_FP( ent->nextbuoy[i] );
+	}
+	HEXP_TO_FP( ent->volfx );
+	HEXP_TO_FP( ent->wakeup_target );
+	HEXP_TO_FP( ent->pain_target );
+	HEXP_TO_FP( ent->homebuoy );
+
 /*
 	// Only clients need skeletons - these are set up when all else is done. -MW.
 
@@ -916,6 +1020,7 @@ void WriteLevel (char *filename)
 
 	// write out a function pointer for checking
 	base = (void *)InitGame;
+	FP_TO_HEXP(base);
 	fwrite (&base, sizeof(base), 1, f);
 
 	// write out level_locals_t
@@ -1019,6 +1124,7 @@ void ReadLevel (char *filename)
 	}
 
 	fread (&base, sizeof(base), 1, f);
+	HEXP_TO_FP(base);
 	if (base != (void *)InitGame)
 	{
 		fclose (f);
