@@ -348,7 +348,7 @@ void InitGame (void)
 	anarchy = gi.cvar("anarchy", "0", 0);
 	impact_damage = gi.cvar("impact_damage", "1", 0);
 	cheating_monsters = gi.cvar("cheating_monsters", "1", 0);
-	singing_ogles = gi.cvar("singing_ogles", "0", 0);
+	singing_ogles = gi.cvar("singing_ogles", "1", 0);
 	no_runshrine = gi.cvar("no_runshrine", "0", 0);
 	no_tornado = gi.cvar("no_tornado", "0", 0);
 	no_teleport = gi.cvar("no_teleport","0",0);
@@ -376,7 +376,7 @@ void InitGame (void)
 	blood_level = gi.cvar ("blood_level", VIOLENCE_DEFAULT_STR, CVAR_ARCHIVE);
 	dm_no_bodies = gi.cvar ("dm_no_bodies", "0", CVAR_ARCHIVE);
 
-	gi.cvar("flash_screen", "1", 0);
+	gi.cvar("flash_screen", "0", 0);
 
 	P_Load(player_dll->string);
 
@@ -684,7 +684,7 @@ void ReadGame (char *filename)
 	if (strcmp (str, /*GAME_DATE_V106*/ __DATE__))
 	{
 #if 0
-		gi.dprintf ("Savegame from an older version %s.\n", str);
+		gi.cprintf (NULL, PRINT_HIGH, "Savegame from an older version %s.\n", str);
 #else
 		fclose (f);
 		gi.error ("Savegame from an older version %s.\n", str);
@@ -1129,7 +1129,14 @@ void ReadLevel (char *filename)
 	if (base != (void *)InitGame)
 	{
 		fclose (f);
-		gi.error ("ReadLevel: function pointers have moved - file was saved on different version.");
+#if 0
+		gi.error ("ReadLevel: function pointers have moved - file was saved on different version: %p vs %p", base, InitGame);
+#else
+		//gi.error fails to clear the loading screen on CL_Drop (client is still disconnected) in quake2.dll
+		// as a workaround, return and rely on other checks dropping to console later on
+		gi.cprintf (NULL, PRINT_HIGH, "ReadLevel: function pointers have moved - file was saved on different version: %p vs %p\n", base, InitGame);
+		return;
+#endif
 	}
 
 	// Load the level locals.

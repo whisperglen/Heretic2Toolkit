@@ -269,8 +269,8 @@
 
 #define RUN_MULT 1.65
 
-#define FAR_CLIP_DIST "4096.0"
-#define FAR_CLIP_DIST_VAL 4096.0
+#define FAR_CLIP_DIST "8192.0"
+#define FAR_CLIP_DIST_VAL 8192.0
 #define NEAR_CLIP_DIST "64.0"
 #define NEAR_CLIP_DIST_VAL 64.0
 

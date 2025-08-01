@@ -124,6 +124,7 @@
       <AdditionalDependencies>winmm.lib;H2Common.lib;quake2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>1.0</Version>
       <ModuleDefinitionFile>.\game.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName)$(PlatformTarget).pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
@@ -170,6 +171,7 @@
       <AdditionalDependencies>winmm.lib;H2Common.lib;quake2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>1.0</Version>
       <ModuleDefinitionFile>.\game.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName)$(PlatformTarget).pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -180,7 +182,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>..\qcommon;..\game;..\Player;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_HERETIC2_;_DEVEL;_GAME_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_HERETIC2_;_DEVEL;_GAME_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <BrowseInformation>true</BrowseInformation>
       <ObjectFileName>.\Debug\</ObjectFileName>
@@ -215,6 +217,7 @@
       <AdditionalDependencies>winmm.lib;H2Common.lib;quake2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>1.0</Version>
       <ModuleDefinitionFile>.\game.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName)$(PlatformTarget).pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">

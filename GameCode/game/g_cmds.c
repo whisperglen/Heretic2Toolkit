@@ -11,6 +11,7 @@
 #include "g_itemstats.h"
 #include "cl_strings.h"
 
+#include "EffectFlags.h"
 
 extern gitem_armor_t silver_armor_info;
 extern gitem_armor_t gold_armor_info;
@@ -23,6 +24,7 @@ extern void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 qboolean CheckFlood(edict_t *ent);
 void ED_CallSpawn (edict_t *ent);
 void MorphPlayerToChicken(edict_t *self, edict_t *caster);
+void Cmd_Light_f( edict_t *ent );
 
 int		self_spawn = FALSE;
 
@@ -501,6 +503,14 @@ void Cmd_Give_f (edict_t *ent)
 		return;
 	}
 
+	// Give permanent effect of Light Shrine
+	if ( Q_stricmp( name, "light" ) == 0 )
+	{
+		Cmd_Light_f( ent );
+
+		return;
+	}
+
 	if (give_all)
 	{
 		for (i=0 ; i<game.num_items ; i++)
@@ -652,6 +662,50 @@ void Cmd_Noclip_f (edict_t *ent)
 	{
 		ent->movetype = PHYSICSTYPE_NOCLIP;
 		msg = "noclip ON\n";
+	}
+
+	gi.cprintf (ent, PRINT_HIGH, msg);
+}
+
+void player_shrine_light_effect(edict_t *self);
+
+void Cmd_Light_f( edict_t *ent )
+{
+	char	*msg;
+
+	if (deathmatch->value && !sv_cheats->value)
+	{
+		gi.gamemsg_centerprintf (ent, GM_NOCHEATS);
+		return;
+	}
+
+	//if (ent->deadflag != DEAD_NO)
+	//	return;
+
+
+	assert(ent->client);
+	if (ent->client->playerinfo.light_timer > level.time)
+	{	// Turn OFF light
+		ent->client->playerinfo.light_timer = level.time-0.1;
+		msg = "Light OFF\n";
+	}
+	else
+	{	// Turn ON light
+
+		// If we are a chicken, lets make us a player again.
+		if (ent->flags & FL_CHICKEN)
+		{
+			ent->morph_timer = level.time - 0.1;
+		}
+
+		// Add some time in on the timer for the light.
+		ent->client->playerinfo.light_timer = level.time + (60*60*24);	// One full day
+
+		// Turn on the light.
+		ent->s.effects |= EF_LIGHT_ENABLED;
+
+		player_shrine_light_effect(ent);
+		msg = "Light ON\n";
 	}
 
 	gi.cprintf (ent, PRINT_HIGH, msg);
