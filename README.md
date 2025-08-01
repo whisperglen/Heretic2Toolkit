@@ -19,3 +19,9 @@ Changes from 1.07 patch of gamex86.dll (base addr 10f50000) have been added:
 - Added cheat for Light: "suckitdown light" this will toggle the Light Shrine effect ON and OFF
 - Crash report helpers: run the .\crashes\CopyCrashDumpHere.bat to copy any previous crash dumps to local folder; these should be used for bug reports
 - Crash helper to activate FullDump, and another to go back to MiniDump
+
+# In case of crashes
+- Disclaimer: NewGame crashes are happening inside quake2.dll and Heretic2.exe and I do not have source-code to investigate them. Maybe when other RE projects on github reach a playable state..
+- Save often, when you get a crash I need to replicate it on my PC to investigate, so zip the savegame file, and copy the Windows minidump file locally using crashes\CopyCrashDumpHere.bat
+- Attach the savegame file and the Windows minidump to a github Issue[https://github.com/whisperglen/Heretic2Toolkit/issues] and I will take a look at it
+- Don't post empty Issues without helpul info: tell me what actions you took, where did you go before the crash etc. If I cannot replicate the rash there's not much I can do!
