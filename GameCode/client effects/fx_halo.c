@@ -75,7 +75,7 @@ static qboolean FXHaloThink(struct client_entity_s *self,centity_t *Owner)
 				CEF_CLIP_TO_ALL, 
 				&trace);
 
-	if (trace.fraction < 1.0)	//Hit something
+	if (halo_pvscull->value && trace.fraction < 1.0)	//Hit something
 	{	
 		if ((trace.ent != ((struct edict_s *)-1)))	//Model
 		{

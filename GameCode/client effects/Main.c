@@ -46,6 +46,7 @@ cvar_t  *cl_lerpdist2;
 cvar_t  *cl_timedemo;
 cvar_t	*crosshair;
 cvar_t	*compass;
+cvar_t  *halo_pvscull;
 
 int ref_soft;
 int	numprocessedparticles;
@@ -157,6 +158,7 @@ void Init()
 	cl_lerpdist2 = Cvar_Get("cl_lerpdist2", "10000", 0);
 	vid_ref = Cvar_Get( "vid_ref", "soft", CVAR_ARCHIVE );
 	crosshair = Cvar_Get ("crosshair", "0", CVAR_ARCHIVE);
+	halo_pvscull = Cvar_Get ("halo_pvscull", "1", 0);
 
 	Clear();
 }

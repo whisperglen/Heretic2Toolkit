@@ -36,7 +36,13 @@
 static struct model_s *torch_models[NUM_TORCH_MODELS];
 void PreCacheTorch()
 {
-	torch_models[0] = fxi.RegisterModel("sprites/lens/halo1.sp2");
+	const char* oldtometex = "sprites/lens/halo1.sp2";
+	const char* newtometex = "sprites/lens/halo1x.sp2";
+	torch_models[0] = fxi.RegisterModel((char*)newtometex);
+	if ( torch_models[0] == NULL )
+	{
+		torch_models[0] = fxi.RegisterModel((char*)oldtometex);
+	}
 	torch_models[1] = fxi.RegisterModel("models/Spells/book/tris.fm");
 }
 
@@ -207,7 +213,7 @@ qboolean FXHomeTorchAddToView(client_entity_t *tome, centity_t *owner)
 
 
 // make the light follow us
-static FXplayertorch_think(struct client_entity_s *self,centity_t *owner)
+qboolean FXplayertorch_think(struct client_entity_s *self,centity_t *owner)
 {
 	// kill us if we are done
 	if (owner->current.effects & EF_LIGHT_ENABLED)

@@ -15,6 +15,7 @@ extern cvar_t	*fxTest3;
 extern cvar_t	*fxTest4;
 extern cvar_t	*cl_timedemo;
 extern cvar_t	*compass;
+extern cvar_t   *halo_pvscull;
 
 extern qboolean fx_FreezeWorld;
 
